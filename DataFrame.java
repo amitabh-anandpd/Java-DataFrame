@@ -1,10 +1,9 @@
 import java.util.*;
 
 class DataFrame {
-    List<String> columns;
-    List<String> rows;
-    List<Integer> index;
-    List<List<Object>> data;
+    private List<String> columns;
+    private List<String> rows;
+    private List<List<Object>> data;
 
     private boolean checkDataSize(List<List<Object>> data){
         if(!this.data.isEmpty() && checkRowSize(data.get(0)))
@@ -17,10 +16,9 @@ class DataFrame {
         return true;
     }
     DataFrame() {
-        columns = new ArrayList<>();
-        rows = new ArrayList<>();
-        index = new ArrayList<>();
-        data = new ArrayList<>();
+        this.columns = new ArrayList<>();
+        this.rows = new ArrayList<>();
+        this.data = new ArrayList<>();
     }
 
     DataFrame(List<List<Object>> data){
@@ -28,8 +26,6 @@ class DataFrame {
             return;
         }
         this.data = data;
-        for(int i=0;i<this.data.size();i++)
-            this.index.add(i);
         for(int i=0;i<this.data.get(0).size();i++)
             this.columns.add(i+"");
     }
@@ -38,42 +34,160 @@ class DataFrame {
         if(!checkDataSize(data)){
             return;
         }
+        if(data.get(0).size()!=columns.size()){
+            return;
+        }
         this.columns = columns;
         this.data = data;
-        index.add(this.data.size()-1);
+    }
+
+    DataFrame(List<List<Object>> data,  List<String> rows, List<String> columns) {
+        if(!checkDataSize(data)){
+            return;
+        }
+        if(data.get(0).size()!=columns.size()){
+            return;
+        }
+        this.columns = columns;
+        this.data = data;
     }
 
 
-    void addRow(List<Object> rowData) {
+    void newRow(List<Object> rowData) {
         if(!checkRowSize(rowData)){
             return;
         }
-        data.add(rowData);
-        index.add(data.size() - 1);
+        this.data.add(rowData);
+        if(!this.rows.isEmpty()){
+            this.rows.add((data.size()-1)+"");
+        }
     }
 
-    void setRow(List<String> rows) {
-        if(rows.size()!=this.index.get(index.size()-1)){
+    void newRow(String rowName, List<Object> rowData) {
+        if(!checkRowSize(rowData)){
+            return;
+        }
+        this.rows.add(rowName);
+        this.data.add(rowData);
+    }
+
+    void nameRows(List<String> rows) {
+        if(rows.size()!=this.data.size()){
             return;
         }
         for(int i=0;i<rows.size();i++)
             this.rows.add(rows.get(i));
     }
 
-    void Columns(List<String>  columns) {
+    void newColumn(String columnName, List<Object>  columns) {
+        if(columns.size()!=this.data.size())
+            return;
+        this.columns.add(columnName);
+        for(int i=0;i<this.data.size();i++){
+            data.get(i).add(columns.get(i));
+        }
+    }
+
+    void newColumn(List<Object>  columns) {
+        if(columns.size()!=this.data.size())
+            return;
+        this.columns.add("newColumn"+this.columns.size());
+        for(int i=0;i<this.data.size();i++){
+            data.get(i).add(columns.get(i));
+        }
+    }
+
+    void renameColumns(List<String>  columns) {
         if(columns.size()!=this.columns.size())
             return;
         this.columns = columns;
     }
 
-    void addColumn(String columnName) {
+    void newEmptyColumn(String columnName) {
         columns.add(columnName);
+        for(int i=0;i<this.data.size();i++){
+            data.get(i).add(null);
+        }
     }
 
+    int count(){
+        return this.data.size();
+    }
+
+    List<List<Object>> head(){
+        List<List<Object>> head = new ArrayList<>();
+        for(int i=0;i<5;i++)
+            head.add(this.data.get(i));
+        return head;
+    }
+    List<List<Object>> head(int n){
+        if(n<=0 || n>this.data.size())
+            return null;
+        if(n==this.data.size())
+            return this.data;
+        List<List<Object>> head = new ArrayList<>();
+        for(int i=0;i<n;i++)
+        head.add(this.data.get(i));
+        return head;
+    }
+
+    List<List<Object>> tail(){
+        List<List<Object>> tail = new ArrayList<>();
+        for(int i=0;i<5;i++)
+            tail.add(this.data.get(this.data.size()-5+i));
+        return tail;
+    }
+    List<List<Object>> tail(int n){
+        if(n<=0 || n>this.data.size())
+            return null;
+        if(n==this.data.size())
+            return this.data;
+        List<List<Object>> head = new ArrayList<>();
+        for(int i=0;i<n;i++)
+        head.add(this.data.get(this.data.size()-n+i));
+        return head;
+    }
+
+    Object get(int row, int column) {
+        if(this.rows.size()<=row || this.columns.size()<=column)
+        return null;
+        return this.data.get(row).get(column);
+    }
+    Object get(String row, String column){
+        if(!this.rows.contains(row) || !this.columns.contains(column))
+        return null;
+        return this.data.get(this.rows.indexOf(row)).get(this.columns.indexOf(column));
+    }
+    Object get(int row, String column){
+        if(this.rows.size()<=row || !this.columns.contains(column))
+        return null;
+        return this.data.get(row).get(this.columns.indexOf(column));
+    }
+    Object get(String row, int column){
+        if(!this.rows.contains(row) || this.columns.size()<=column)
+        return null;
+        return this.data.get(this.rows.indexOf(row)).get(column);
+    }
+
+    private void iterate(List<String> over, int size){
+        for(int i=0;i<size;i++){
+            System.out.print(over.get(i)+"\t");
+        }
+        System.out.println();
+    }
+    private void iterate(int index, List<Object> over, int size){
+        if(index>9)
+        System.out.print(index+"\t");
+        else
+        System.out.print(index+" \t");
+        for(int i=0;i<size;i++){
+            System.out.print(over.get(i)+"\t");
+        }
+        System.out.println();
+    }
     void display() {
-        System.out.println("Columns: " + columns);
-        System.out.println("Rows: " + rows);
-        System.out.println("Index: " + index);
-        System.out.println("Data: " + data);
+        iterate(columns, columns.size());
+        for(int i=0;i<data.size();i++)
+        iterate(i, data.get(i), columns.size());
     }
 }
