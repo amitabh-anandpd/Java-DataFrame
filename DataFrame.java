@@ -4,54 +4,52 @@ class DataFrame {
     private List<String> columns;
     private List<String> rows;
     private List<List<Object>> data;
-
-    private boolean checkDataSize(List<List<Object>> data){
-        if(!this.data.isEmpty() && checkRowSize(data.get(0)))
-            return  false;
-        return true;
-    }
+    private List<Object> colType;
+    
     private boolean checkRowSize(List<Object> row){
         if(this.data.get(0).size()!=row.size())
             return false;
         return true;
     }
+    private Class<?> detectType(Object obj){
+        return (obj != null) ? obj.getClass() : null;
+    }
     DataFrame() {
         this.columns = new ArrayList<>();
         this.rows = new ArrayList<>();
         this.data = new ArrayList<>();
+        this.colType = new ArrayList<>();
     }
 
     DataFrame(List<List<Object>> data){
-        if(!checkDataSize(data)){
-            return;
-        }
         this.data = data;
-        for(int i=0;i<this.data.get(0).size();i++)
+        for(int i=0;i<this.data.get(0).size();i++){
             this.columns.add(i+"");
+            this.colType.add(detectType(this.data.get(0).get(i)));
+        }
     }
 
     DataFrame(List<List<Object>> data,  List<String> columns) {
-        if(!checkDataSize(data)){
-            return;
-        }
         if(data.get(0).size()!=columns.size()){
             return;
         }
         this.columns = columns;
         this.data = data;
+        for(int i=0;i<this.data.get(0).size();i++){
+            this.colType.add(detectType(this.data.get(0).get(i)));
+        }
     }
 
     DataFrame(List<List<Object>> data,  List<String> rows, List<String> columns) {
-        if(!checkDataSize(data)){
-            return;
-        }
         if(data.get(0).size()!=columns.size()){
             return;
         }
         this.columns = columns;
         this.data = data;
+        for(int i=0;i<this.data.get(0).size();i++){
+            this.colType.add(detectType(this.data.get(0).get(i)));
+        }
     }
-
 
     void newRow(List<Object> rowData) {
         if(!checkRowSize(rowData)){
