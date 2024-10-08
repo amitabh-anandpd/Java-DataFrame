@@ -9,6 +9,11 @@ class DataFrame {
     private boolean checkRowSize(List<Object> row){
         if(this.data.get(0).size()!=row.size())
             return false;
+        for(int i=0;i<row.size();i++){
+            if(detectType(row.get(i))!=this.colType.get(i)){
+                return false;
+            }
+        }
         return true;
     }
     private Class<?> detectType(Object obj){
@@ -81,6 +86,7 @@ class DataFrame {
         if(columns.size()!=this.data.size())
             return;
         this.columns.add(columnName);
+        this.colType.add(detectType(columns.get(0)));
         for(int i=0;i<this.data.size();i++){
             data.get(i).add(columns.get(i));
         }
@@ -90,6 +96,7 @@ class DataFrame {
         if(columns.size()!=this.data.size())
             return;
         this.columns.add("newColumn"+this.columns.size());
+        this.colType.add(detectType(columns.get(0)));
         for(int i=0;i<this.data.size();i++){
             data.get(i).add(columns.get(i));
         }
@@ -106,6 +113,7 @@ class DataFrame {
         for(int i=0;i<this.data.size();i++){
             data.get(i).add(null);
         }
+        this.colType.add(detectType(columns.get(0)));
     }
 
     int count(){
