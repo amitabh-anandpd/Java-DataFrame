@@ -203,7 +203,7 @@ class DataFrame {
     }
 
     Object get(int row, int column) {
-        if(this.rows.size()<=row || this.columns.size()<=column)
+        if(this.data.size()<=row || this.columns.size()<=column)
         return null;
         return this.data.get(row).get(column);
     }
@@ -213,7 +213,7 @@ class DataFrame {
         return this.data.get(this.rows.indexOf(row)).get(this.columns.indexOf(column));
     }
     Object get(int row, String column){
-        if(this.rows.size()<=row || !this.columns.contains(column))
+        if(this.data.size()<=row || !this.columns.contains(column))
         return null;
         return this.data.get(row).get(this.columns.indexOf(column));
     }
