@@ -19,6 +19,30 @@ class DataFrame {
     private Class<?> detectType(Object obj){
         return (obj != null) ? obj.getClass() : null;
     }
+
+    private static void to_csv(List<List<Object>> fulldata, List<Object> cols, String filepath)throws IOException {
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(filepath))){
+            StringBuilder builder = new StringBuilder();
+            for(int i = 0; i < cols.size(); i++){
+                builder.append(cols.get(i).toString());
+                if(i < cols.size() - 1)
+                    builder.append(",");
+            }
+            writer.write(builder.toString());
+            writer.newLine();
+            for(List<Object> row : fulldata){
+                StringBuilder nbuilder = new StringBuilder();
+                for(int i = 0; i < row.size(); i++){
+                    nbuilder.append(row.get(i).toString());
+                    if(i < row.size() - 1)
+                        nbuilder.append(",");
+                }
+                writer.write(nbuilder.toString());
+                writer.newLine();
+            }
+        }
+    }
+    
     DataFrame() {
         this.columns = new ArrayList<>();
         this.rows = new ArrayList<>();
