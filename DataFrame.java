@@ -42,6 +42,30 @@ class DataFrame {
             }
         }
     }
+
+    private static List<List<Object>> read_csv(String filePath) throws IOException {
+        List<List<Object>> rows = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            if((line = reader.readLine()) != null){
+                String[] cols = line.split(",");
+                List<Object> column = new ArrayList<>();
+                for(String col : cols){
+                    column.add(col);
+                }
+                rows.add(column);
+            }
+            while ((line = reader.readLine()) != null) {
+                String[] values = line.split(",");
+                List<Object> row = new ArrayList<>();
+                for (String value : values) {
+                    row.add(value);
+                }
+                rows.add(row);
+            }
+        }
+        return rows;
+    }
     
     DataFrame() {
         this.columns = new ArrayList<>();
