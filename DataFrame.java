@@ -202,6 +202,16 @@ class DataFrame {
         return head;
     }
 
+    void read_csv(String filepath)throws IOException{
+        this.data = read_CSV(filepath);
+        for(int i = 0; i < this.data.get(0).size(); i++)
+            this.columns.add((String)this.data.get(0).get(i));
+        this.data.remove(0);
+    }
+    void to_csv(String filepath) throws IOException{
+        to_csv(this.data, this.columns, filepath);
+    }
+
     Object get(int row, int column) {
         if(this.data.size()<=row || this.columns.size()<=column)
         return null;
