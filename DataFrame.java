@@ -225,7 +225,7 @@ class DataFrame {
 
     private void iterate(List<String> over, int size){
         for(int i=0;i<size;i++){
-            System.out.print(over.get(i)+"\t");
+            System.out.print("\t"+over.get(i));
         }
         System.out.println();
     }
