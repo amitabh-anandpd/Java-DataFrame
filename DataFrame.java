@@ -168,6 +168,10 @@ class DataFrame {
         return this.data.size();
     }
 
+    List<List<Object>> getData(){
+        return this.data;
+    }
+
     List<List<Object>> head(){
         List<List<Object>> head = new ArrayList<>();
         for(int i=0;i<5;i++)
