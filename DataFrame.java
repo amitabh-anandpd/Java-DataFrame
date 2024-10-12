@@ -4,7 +4,7 @@ class DataFrame {
     private List<String> columns;
     private List<String> rows;
     private List<List<Object>> data;
-    private List<Object> colType;
+    private List<Class <?>> colType;
     
     private boolean checkRowSize(List<Object> row){
         if(this.data.get(0).size()!=row.size())
@@ -75,11 +75,15 @@ class DataFrame {
     }
 
     DataFrame(List<List<Object>> data){
-        this.data = data;
-        for(int i=0;i<this.data.get(0).size();i++){
+        for(int i=0;i<data.get(0).size();i++){
             this.columns.add(i+"");
-            this.colType.add(detectType(this.data.get(0).get(i)));
+            this.colType.add(detectType(data.get(0).get(i)));
+            for(int j = 0; j < data.size(); j++){
+                if(data.get(j).get(i).getClass()!=colType.get(i))
+                    return;
+            }
         }
+        this.data = data;
     }
 
     DataFrame(List<List<Object>> data,  List<String> columns) {
@@ -90,6 +94,10 @@ class DataFrame {
         this.data = data;
         for(int i=0;i<this.data.get(0).size();i++){
             this.colType.add(detectType(this.data.get(0).get(i)));
+            for(int j = 0; j < data.size(); j++){
+                if(data.get(j).get(i).getClass()!=colType.get(i))
+                    return;
+            }
         }
     }
 
@@ -167,7 +175,9 @@ class DataFrame {
     int count(){
         return this.data.size();
     }
-
+    List<String> columns(){
+        return this.columns;
+    }
     List<List<Object>> getData(){
         return this.data;
     }
@@ -235,6 +245,25 @@ class DataFrame {
         if(!this.rows.contains(row) || this.columns.size()<=column)
         return null;
         return this.data.get(this.rows.indexOf(row)).get(column);
+    }
+
+    public void removeColumn(int colIndex){
+        for(int i = 0; i < this.data.size(); i++){
+            this.data.get(i).remove(colIndex);
+        }
+    }
+    public void removeRow(int rowIndex){
+        this.data.remove(rowIndex);
+    }
+    public List<Object> getColumn(int colIndex){
+        List<Object> column = new ArrayList<>();
+        for(int i = 0; i < this.data.size(); i++){
+            column.add(this.data.get(i).get(colIndex));
+        }
+        return column;
+    }
+    public List<Object> getRow(int rowIndex){
+        return this.data.get(rowIndex);
     }
 
     private void iterate(List<String> over, int size){
