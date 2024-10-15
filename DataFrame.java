@@ -74,44 +74,38 @@ class DataFrame {
         this.colType = new ArrayList<>();
     }
 
-    DataFrame(List<List<Object>> data){
-        for(int i=0;i<data.get(0).size();i++){
-            this.columns.add(i+"");
-            this.colType.add(detectType(data.get(0).get(i)));
-            for(int j = 0; j < data.size(); j++){
-                if(data.get(j).get(i).getClass()!=colType.get(i))
+    public DataFrame(List<List<Object>> data) {
+        this(data, generateDefaultColumnNames(data));
+    }
+
+    public DataFrame(List<List<Object>> data, List<String> columns) {
+        this(data, null, columns);
+    }
+
+    public DataFrame(List<List<Object>> data, List<String> rows, List<String> columns) {
+        if (data.isEmpty() || data.get(0).size() != columns.size()) {
+            return;
+        }
+        this.data = data;
+        this.columns = columns;
+        this.rows = (rows != null && rows.size() == data.size()) ? rows : null;
+        this.colType = new ArrayList<>();
+        for (int i = 0; i < data.get(0).size(); i++) {
+            Class<?> type = detectType(data.get(0).get(i));
+            this.colType.add(type);
+            for (int j = 0; j < data.size(); j++) {
+                if (!type.isInstance(data.get(j).get(i)))
                     return;
             }
         }
-        this.data = data;
     }
-
-    DataFrame(List<List<Object>> data,  List<String> columns) {
-        if(data.get(0).size()!=columns.size()){
-            return;
+    private static List<String> generateDefaultColumnNames(List<List<Object>> data) {
+        List<String> cols = new ArrayList<>();
+        for (int i = 0; i < data.get(0).size(); i++) {
+            cols.add(String.valueOf(i));
         }
-        this.columns = columns;
-        this.data = data;
-        for(int i=0;i<this.data.get(0).size();i++){
-            this.colType.add(detectType(this.data.get(0).get(i)));
-            for(int j = 0; j < data.size(); j++){
-                if(data.get(j).get(i).getClass()!=colType.get(i))
-                    return;
-            }
-        }
+        return cols;
     }
-
-    DataFrame(List<List<Object>> data,  List<String> rows, List<String> columns) {
-        if(data.get(0).size()!=columns.size()){
-            return;
-        }
-        this.columns = columns;
-        this.data = data;
-        for(int i=0;i<this.data.get(0).size();i++){
-            this.colType.add(detectType(this.data.get(0).get(i)));
-        }
-    }
-
     void newRow(List<Object> rowData) {
         if(!checkRowSize(rowData)){
             return;
