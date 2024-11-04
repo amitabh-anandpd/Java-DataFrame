@@ -254,6 +254,26 @@ class DataFrame {
     public List<Object> getRow(int rowIndex){
         return this.data.get(rowIndex);
     }
+    public DataFrame sample(){
+        return sample(5);
+    }
+    public DataFrame sample(int n){
+        if(this.data.size()<n)
+            return this;
+        DataFrame samlpeFrame = this;
+        for(int i = 0; i < this.data.size(); i++){
+            samlpeFrame.removeRow(i);
+        }
+        List<Integer> indices = new ArrayList<>();
+        for (int i = 0; i < this.data.size(); i++) {
+            indices.add(i);
+        }
+        Collections.shuffle(indices);
+        for(int i = 0; i < n; i++){
+            samlpeFrame.newRow(this.data.get(indices.get(i)));
+        }
+        return samlpeFrame;
+    }
     private void iterate(List<String> over, int size){
         for(int i=0;i<size;i++){
             System.out.print("\t"+over.get(i));
