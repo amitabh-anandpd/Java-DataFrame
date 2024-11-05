@@ -254,8 +254,11 @@ class DataFrame {
     public List<Object> getRow(int rowIndex){
         return this.data.get(rowIndex);
     }
+    public DataFrame shuffle(){
+        return sample(this.data.size());
+    }
     public DataFrame sample(){
-        return sample(5);
+        return sample(10);
     }
     public DataFrame sample(int n){
         if(this.data.size()<n)
