@@ -24,7 +24,13 @@ Initializes the DataFrame using a list of data rows, predefined row names, and p
 
 ## 3. Attributes - 
 ### **DataFrame.count():**
-Returns the size (int) of the DataFrame. Number of rows to be exact.
+Returns the size (int) of the DataFrame. Same as the number of rows.
+### **DataFrame.shuffle():**
+Returns a DataFrame with rows randomized. All other fields are kept the same.
+### **DataFrame.sample(int n):**
+Returns a DataFrame with `n` random rows of the original DataFrame. All other fields are same. If `n` is not specified, it take a default value of 10.
+### **DataFrame.read_csv(String filepath):**
+Takes the reading of csv file as the data of the DataFrame. `filepath` is the path to the csv file. Assigns the first row of csv file as column names. 
 ## 4. Indexing - 
 - **DataFrame.get(row, column):** Returns a single specific value (Object). Parameters can either be 'int' or 'String', but 'row' parameter can only be string if the row names are provided.
 - **DataFrame.head(n):** Returns the first 'n' rows in the form of List<List<Object>>. If 'n' not specified then returns the first 5 rows.
